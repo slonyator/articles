@@ -1,4 +1,4 @@
-# Abstract / Introduction
+# Abstract 
 
 ## Personal Experience and Motivation
 Anyone who has worked with large language models (LLMs), whether for personal or professional projects, knows that some prompts perform better than others. For complex tasks, techniques like *Zero-Shot Learning*, *Few-Shot Learning*, and *Chain-of-Thought* prompting come into play. The term "prompt engineering" has become commonplace, yet it often involves trial-and-error—tweaking text, adding examples, and hoping for better results. While this may seem simple, it quickly becomes tedious and inefficient.
