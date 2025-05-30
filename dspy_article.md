@@ -66,22 +66,23 @@ Relevant optimizers include:
 ---
 
 ## Model Weight Finetuning
-Some optimizers go beyond prompts to fine-tune the weights of small or tunable LLMs, improving their internal behavior.
+DSPy optimizers not only refine prompts but also enable direct optimization of model weights for small or tunable large language models (LLMs), enhancing their internal behavior. Additionally, DSPy supports student-teacher learning, where a smaller, local model—often hosted via platforms like Ollama—can be trained to mimic the performance of a larger model. However, student-teacher learning is beyond the scope of this post. For a detailed tutorial on this topic, refer to the [DSPy Classification Finetuning Tutorial](https://github.com/stanfordnlp/dspy/blob/main/docs/docs/tutorials/classification_finetuning/index.ipynb).
 
 ### Methodology
-This involves:
-- **Trace Collection**: Gathering high-quality input/output pairs from program runs.
-- **Data Distillation**: Converting traces into synthetic datasets for finetuning.
+The process for model weight finetuning involves:
+- **Trace Collection**: Gathering high-quality input/output pairs from program runs to capture effective behaviors.
+- **Data Distillation**: Converting these traces into synthetic datasets suitable for finetuning.
 - **Finetuning**: Applying parameter-efficient updates to align the model with task requirements.
 
-This is best suited for:
-- Small LLMs that support finetuning
-- Scenarios where model improvement, not just prompting, is needed
+This approach is best suited for:
+- Small LLMs that support finetuning, such as those hosted locally via Ollama.
+- Scenarios requiring model improvement beyond prompting, particularly for resource-constrained environments.
+- Applications where local deployment is preferred for cost, latency, or data privacy reasons.
 
-The primary optimizer for this is:
+The primary optimizer for direct weight finetuning is:
 - `BootstrapFinetune`
 
----
+Examples demonstrating direct weight optimization are provided in the accompanying Jupyter Notebook.
 
 ## Summary: Two Paths to Optimization
 DSPy offers two complementary strategies:
