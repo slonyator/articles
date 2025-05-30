@@ -1,3 +1,23 @@
+# Table of Contents
+- [Table of Contents](#table-of-contents)
+- [Abstract](#abstract)
+  - [Personal Experience and Motivation](#personal-experience-and-motivation)
+  - [What is DSPy?](#what-is-dspy)
+  - [Out-of-Scope](#out-of-scope)
+- [Disclaimer](#disclaimer)
+  - [Feature Variability Across Versions](#feature-variability-across-versions)
+  - [Limitations (When to Use / Not to Use)](#limitations-when-to-use--not-to-use)
+- [DSPy Optimizers](#dspy-optimizers)
+  - [Overview](#overview)
+  - [Prompt Optimization](#prompt-optimization)
+    - [Methodology](#methodology)
+  - [Model Weight Finetuning](#model-weight-finetuning)
+    - [Methodology](#methodology-1)
+  - [Summary: Two Paths to Optimization](#summary-two-paths-to-optimization)
+  - [Detailed Breakdown of Optimizers](#detailed-breakdown-of-optimizers)
+- [Conclusion](#conclusion)
+
+
 # Abstract 
 
 ## Personal Experience and Motivation
