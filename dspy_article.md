@@ -108,17 +108,3 @@ This table is informed by sources like [Understanding Optimizers in DSPy](https:
 
 ---
 
-### Practical Example
-Here’s how to optimize a question-answering program using `BootstrapFewShot`, based on the DSPy documentation:
-
-```python
-from dspy.optimize import BootstrapFewShot
-from dspy.evaluate import answer_exact_match
-
-metric = answer_exact_match
-optimizer = BootstrapFewShot(metric=metric)
-optimized_program = optimizer.compile(YOUR_PROGRAM_HERE, trainset=YOUR_TRAINSET_HERE)
-```
-
-This example, also highlighted in Intro to DSPy, shows how DSPy transforms manual prompt tweaking into a systematic, scalable process. Further details are available in the accompanying Jupyter Notebook.
-
