@@ -108,6 +108,6 @@ This table is informed by sources like [Understanding Optimizers in DSPy](https:
 
 ---
 
-## Conclusion
+# Conclusion
 
 DSPy's optimizers have proven to be a transformative tool for automating prompt and model weight optimization, offering a systematic alternative to manual prompt engineering. In our proof-of-concept (PoC), we utilized DSPy to enhance our application's performance on a real dataset, achieving a significant **12% improvement in accuracy score**. To explore model weight finetuning, we employed a synthetic dataset due to limitations with AWS Bedrock, which currently supports weight optimization only in two U.S. regions, not in the Frankfurt region. By using OpenAI models hosted in the U.S. and adhering to data protection requirements with a synthetic dataset, we achieved an impressive **30% accuracy score improvement**. These results demonstrate DSPy's capability to deliver substantial performance gains across both real and synthetic datasets, making it an invaluable tool for developing robust AI systems while addressing regional and technical constraints. Detailed examples showcasing these optimizations are provided in the accompanying Jupyter Notebook.
