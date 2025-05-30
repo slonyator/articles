@@ -3,7 +3,7 @@
 ### Personal Experience and Motivation
 Anyone who has worked with large language models (LLMs), whether for personal or professional projects, knows that some prompts perform better than others. For complex tasks, techniques like *Zero-Shot Learning*, *Few-Shot Learning*, and *Chain-of-Thought* prompting come into play. The term "prompt engineering" has become commonplace, yet it often involves trial-and-error—tweaking text, adding examples, and hoping for better results. While this may seem simple, it quickly becomes tedious and inefficient.
 
-My own frustration with this hit-or-miss approach stemmed from its lack of structure. Switching LLMs or task contexts meant starting from scratch, making prompt engineering repetitive and time-consuming. This led me to explore DSPy, a Python-based toolkit introduced after the DASH Meetup, which offers a systematic way to optimize prompts and model performance.
+My own frustration with this hit-or-miss approach stemmed from its lack of structure. Switching LLMs or task contexts meant starting from scratch, making prompt engineering repetitive and time-consuming. This led me to discover DSPy—a Python-based toolkit I came across following the DASH Meetup—which provides a systematic approach to optimizing prompts and model performance.
 
 ### What is DSPy?
 DSPy is a framework designed to streamline the optimization of prompts and model weights for LLMs. It provides an intuitive interface to automate the exploration and refinement of prompts, reducing manual effort while boosting performance. DSPy supports two key optimization strategies:
