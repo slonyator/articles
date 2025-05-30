@@ -3,7 +3,7 @@
 ### Personal Experience and Motivation
 Everyone who has used large language models (LLMs), whether privately or professionally, has encountered the reality that some prompts simply work better than others. Tackling more complex tasks introduces various prompting techniques like *Zero-Shot Learning*, *Few-Shot Learning*, and *Chain-of-Thoughts*. Even the term "prompt-engineering" has entered common vocabulary. However, in practice, prompt engineering often boils down to fiddling with text, adding a few examples, and checking if the modified prompt yields better results. Voilà, you're a (prompt-) engineer! Ironically, while it seems straightforward, it can quickly become tedious and inefficient.
 
-Personally, this iterative and guess-based approach was not appealing due to the lack of a systematic method to identify the optimal prompt. Changing the underlying LLM usually means having to adapt prompts again, essentially restarting the entire optimization process. Similarly, shifting the task context requires beginning anew, turning prompt engineering into a repetitive, frustrating, and time-consuming endeavor. This frustration led me to seek a more structured solution, ultimately leading me to discover DSPy—a promising project introduced at the DASH Meetup.
+Personally, this iterative and guess-based approach was not appealing due to the lack of a systematic method to identify the optimal prompt. Changing the underlying LLM usually means having to adapt prompts again, essentially restarting the entire optimization process. Similarly, shifting the task context requires beginning anew, turning prompt engineering into a repetitive, frustrating, and time-consuming endeavor. This frustration led me to seek a more structured solution, ultimately leading me to discover DSPy—a promising project introduced after the DASH Meetup.
 
 ### What is DSPy?
 DSPy is a Python-based toolkit designed specifically to automate and systematize the process of prompt optimization for large language models. It provides a flexible, intuitive interface enabling systematic exploration and optimization of prompts, drastically reducing manual effort and enhancing performance.
@@ -42,33 +42,12 @@ While DSPy significantly enhances the efficiency and quality of prompt optimizat
 
 
 
-## Key Points
-- DSPy optimizers, called teleprompters, help improve AI programs by tuning prompts and model weights.
-- Research suggests they work best with metrics like accuracy, using methods like few-shot learning or finetuning.
-- It seems likely that different teleprompters, like BootstrapFewShot or MIPROv2, suit various tasks and data sizes.
 
-## Introduction to DSPy Teleprompters
-DSPy is a framework for programming AI systems, and its optimizers, known as teleprompters, automate the process of creating effective prompts. They aim to enhance performance by tuning prompts or finetuning language model weights, guided by metrics like accuracy or cost.
 
-## Types and Functions
-There are several teleprompters, each with a specific role:
-- **LabeledFewShot** uses labeled data for few-shot learning.
-- **BootstrapFewShot** generates examples dynamically, ideal for limited data.
-- **BootstrapFewShotWithRandomSearch** explores more combinations for larger datasets.
-- **BootstrapFinetune** adjusts model weights for better performance.
-- **Ensemble** combines multiple programs for improved results.
-- **COPRO** refines instructions iteratively.
-- **MIPROv2** optimizes both examples and instructions, especially for complex tasks.
-
-## Practical Example
-For instance, using BootstrapFewShot, you can optimize a question-answering program by selecting the best examples based on an exact match metric, as shown in code examples from DSPy documentation.
-
----
-
-## Detailed Analysis of DSPy Optimizers
+## DSPy Optimizers
 
 ### Background and Context
-DSPy, developed by Stanford NLP, is a framework for programming rather than prompting language models, aiming to create robust AI systems. As of May 30, 2025, its optimizers, referred to as teleprompters, are crucial for enhancing program performance by automating prompt optimization and model finetuning. This analysis expands on the initial draft provided, integrating insights from various online resources to offer a comprehensive understanding.
+As of May 30, 2025, its optimizers, referred to as teleprompters, are crucial for enhancing program performance by automating prompt optimization and model finetuning. 
 
 ### Methodology and Operation of Teleprompters
 
