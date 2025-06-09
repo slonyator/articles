@@ -122,3 +122,21 @@ This validation is particularly critical for the **Claims Date**, which must be 
 Returning natural language like _"the claim happened on dd.mm.yyyy"_ would be semantically correct, but operationally unusable, as it complicates downstream parsing and validation.
 
 ---
+
+### Verification Job
+
+#### Why do we need it?
+Both BERT models (Schaden-Objekt & Schaden-Typ-Kennung) make their predictions completely independent one from another, but not all the possible combinations are valid. For instance it would not be a valid combination to return SD-Objekt: AH and SD-Typ: LW 
+So we have basically two options either we return an error (INVALID DATA) or we try to fix the prediction. In order to increase the number of predictions, which where put into the PIA system and reduce the number of cases which are "nicht angelegt". Therefore again pydantic in combination with the instructor package was used for the structured prediction. In my opinion it is the best package for structured predictions (although there are a lot of alternatives, e.g. LangChain, LlamaIndex, Marvin, etc.) but instructor is the most light weight and it offers a retry option which I did not see in all the other packages. 
+- So all in all if a non-valid combination is provided we use Claude + pydantic + instructor in order to return a valid prediction. For instance if the BERT models ("aren't sure" if it is a VK or KH claim Claude eventually has to make a decision)
+
+#### Proceedure
+
+In various experiments we saw that the best result can be achieved if we pass the summary and the BERT predictions to Claude to get a "confirmation / verification" even if it is a valid combination. So basically all the predictions getting confirmed (if we have a non-valid combination from BERT then a valid prediction is made)
+
+#### Exceptions
+Motor claims / BR vs GL claims
+For some cases we saw that they should not be verified (in case they are valid) because Claude overwrites the predictions and makes a correct prediction incorrect. This will be elaborated later.
+
+
+
