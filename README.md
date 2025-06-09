@@ -97,8 +97,28 @@ This evaluation may be revisited in the future, particularly as newer foundation
 ---
 
 
-### Damage Report Job (Lambda Function)
+### 📄 Damage Report Job (Lambda Function)
 
-- The target of the damage report job is to provide the information about the claims date (Schaden-Datum), summary and notifier (Melder). The entire prediction is made in one step. We do it because there was no difference if we would do it in three steps (three calls to AWS Bedrock --> 3x the costs) or if we do it in one go.
-- We also checked if it makes an impact to use the summary for the prediction of `Schaden-Objekt` & `Schaden-Typ-Kennung` (basically providing the summary to the BERT models [of course they have been trained with the summaries as well], but there was no difference wether we provide the entire text or summary to the BERT models. This is most likely a result of the BERT models using only the first 512 tokens).  
-⁠- For the first time we use a pydantic Basemodel for the prediction. This ensures that we get the response in the correct format or an error. No hallucinations. This is especially important for the Claims-Date. To properly extract the claims-date we need the that the model returns the claims-date and only the claims date (null in case there is no claims date in the given document). Because if the model would return something like "the claim happend on dd.mm.yyyy" the answer might be correct, but the format makes it almost impossible to deal with it in the follow up process.
+The **Damage Report Job** is responsible for extracting three pieces of information from the document:
+
+- **Claims Date** (`Schaden-Datum`)
+- **Summary**
+- **Notifier** (`Melder`)
+
+All three elements are predicted **in a single call** using a single model invocation. This design decision was made after testing showed no measurable performance improvement from breaking the task into separate steps (i.e., three separate model calls). For cost and time considerations all three pieces of information are extracted in one shot.
+
+#### 🔁 Summary as an Input for the BERT models
+
+We also evaluated whether using the generated **summary** as an input to the BERT models for `Schaden-Objekt` and `Schaden-Typ-Kennung` would improve classification accuracy. However, our experiments showed no benefit in providing the summary over the full extracted text. This is likely due to the BERT models' input limitation of **512 tokens**, meaning both the summary and the full text are effectively truncated in similar ways.
+
+#### ✅ Structured Output with Pydantic
+
+This job is the **first in the pipeline to use a `pydantic.BaseModel`** for enforcing response schema validation. The model is required to return a well-structured response or raise a validation error—**no hallucinations or ambiguous formats are accepted**.
+
+This validation is particularly critical for the **Claims Date**, which must be returned as a machine-readable value:
+- Either a properly formatted date string (`dd.mm.yyyy`)
+- Or `null`, if no claims date can be identified in the document
+
+Returning natural language like _"the claim happened on dd.mm.yyyy"_ would be semantically correct, but operationally unusable, as it complicates downstream parsing and validation.
+
+---
