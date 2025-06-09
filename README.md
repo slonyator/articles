@@ -4,9 +4,7 @@ This project is a hybrid on-premise and AWS-based document processing system. It
 
 ---
 
-## 📦 Technical Setup
-
-### 🏠 On-Premise Service
+## 🏠 On-Premise Service
 
 The on-premise component is responsible for initiating the processing pipeline. Its key responsibilities include:
 
@@ -26,7 +24,7 @@ This service is **deployed on OpenShift**. You can find the source code and depl
 
 ---
 
-### ☁️ AWS Service
+## ☁️ AWS Service
 
 The AWS component orchestrates a series of processing jobs using **Lambda functions** and **SageMaker endpoints**. The processing pipeline is executed in the following order:
 
@@ -38,4 +36,28 @@ The AWS component orchestrates a series of processing jobs using **Lambda functi
 3. **Verification Job** (Lambda Function)
 4. **Damage Cause Job** (Lambda Function)
 5. **Evaluation Job** (Lambda Function)
+   
+
+### 🔧 Preprocessing Job (Lambda Function)
+
+The **Preprocessing Job** is the first step in the AWS processing pipeline. It prepares the input data for downstream analysis by performing the following tasks:
+
+1. **Input Handling**  
+   The job receives a JSON payload from the on-premise service. This payload contains essential metadata, including the `doc-id`, `Meldedatum`, and `Sparte`.
+
+2. **Document Retrieval**  
+   Using the provided `doc-id`, the job locates and retrieves the corresponding PDF document stored in an Amazon S3 bucket.
+
+3. **Text Extraction via AWS Textract**  
+   The document is submitted to **AWS Textract** using the `StartDocumentAnalysis` operation, which performs asynchronous text extraction. Textract automatically analyzes the content and structure of each page in the PDF.
+
+4. **Document Type Handling**  
+   After receiving the extracted text, the system determines whether the document is a **form-based document**:
+   - If **form elements** (e.g., key-value pairs) are detected, a **key-value extraction** method is used to preserve structured data.
+   - If no such structure is present, standard **text block extraction** is applied to process unstructured content.
+
+5. **Asynchronous Execution Note**  
+   The use of `StartDocumentAnalysis` requires handling asynchronous page-level extraction results, which are retrieved through subsequent polling or event-driven callbacks once processing is complete.
+
+---
 
