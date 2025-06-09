@@ -59,5 +59,9 @@ The **Preprocessing Job** is the first step in the AWS processing pipeline. It p
 5. **Asynchronous Execution Note**  
    The use of `StartDocumentAnalysis` requires handling asynchronous page-level extraction results, which are retrieved through subsequent polling or event-driven callbacks once processing is complete.
 
+6. **Cost Consideration**  
+   AWS Textract currently represents the **largest cost block** within the claims notification application.  
+   It incurs an estimated cost of **approximately $1,000 USD per month**, primarily driven by the volume and complexity of PDF documents processed.
+
 ---
 
