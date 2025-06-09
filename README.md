@@ -96,3 +96,9 @@ This evaluation may be revisited in the future, particularly as newer foundation
 
 ---
 
+
+### Damage Report Job (Lambda Function)
+
+- The target of the damage report job is to provide the information about the claims date (Schaden-Datum), summary and notifier (Melder). The entire prediction is made in one step. We do it because there was no difference if we would do it in three steps (three calls to AWS Bedrock --> 3x the costs) or if we do it in one go.
+- We also checked if it makes an impact to use the summary for the prediction of `Schaden-Objekt` & `Schaden-Typ-Kennung` (basically providing the summary to the BERT models [of course they have been trained with the summaries as well], but there was no difference wether we provide the entire text or summary to the BERT models. This is most likely a result of the BERT models using only the first 512 tokens).  
+⁠- For the first time we use a pydantic Basemodel for the prediction. This ensures that we get the response in the correct format or an error. No hallucinations. This is especially important for the Claims-Date. To properly extract the claims-date we need the that the model returns the claims-date and only the claims date (null in case there is no claims date in the given document). Because if the model would return something like "the claim happend on dd.mm.yyyy" the answer might be correct, but the format makes it almost impossible to deal with it in the follow up process.
