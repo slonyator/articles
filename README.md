@@ -28,15 +28,22 @@ This service is **deployed on OpenShift**. You can find the source code and depl
 
 The AWS component orchestrates a series of processing jobs using **Lambda functions** and **SageMaker endpoints**. The processing pipeline is executed in the following order:
 
-1. **Preprocessing Job** (Lambda Function)
-2. **Parallel Jobs**
-   - **SD-Typ** (SageMaker Endpoint)
-   - **SD-Objekt** (SageMaker Endpoint)
-   - **Damage Report Job** (Lambda Function)
-3. **Verification Job** (Lambda Function)
-4. **Damage Cause Job** (Lambda Function)
+1. **Preprocessing Job** (Lambda Function)  
+2. **Parallel Jobs**  
+   - **SD-Typ** (SageMaker Endpoint)  
+   - **SD-Objekt** (SageMaker Endpoint)  
+   - **Damage Report Job** (Lambda Function)  
+3. **Verification Job** (Lambda Function)  
+4. **Damage Cause Job** (Lambda Function)  
 5. **Evaluation Job** (Lambda Function)
-   
+
+All Lambda functions and SageMaker endpoints are **orchestrated using AWS Step Functions**. This enables a reliable, stateful execution flow in which each step:
+
+- Consumes the output of the previous step
+- Enriches the state with its own results
+- Passes the updated state forward to the next step in the chain
+
+Only the **Evaluation Job**, which is the final step in the process, returns a response to the on-premise service. This response is a **cleaned and formatted JSON** that includes only the relevant information required downstream. Intermediate artifacts—such as the full extracted text from the preprocessing step or summaries from earlier jobs—are **intentionally dropped** at this point to minimize payload size and ensure response clarity.   
 
 ### 🔧 Preprocessing Job (Lambda Function)
 
@@ -88,3 +95,4 @@ This evaluation may be revisited in the future, particularly as newer foundation
 - There is potential for **cost optimization** by exploring a smaller SageMaker instance type. The current instance type in use is: **`<INSERT INSTANCE TYPE>`**.
 
 ---
+
