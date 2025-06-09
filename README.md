@@ -123,20 +123,55 @@ Returning natural language like _"the claim happened on dd.mm.yyyy"_ would be se
 
 ---
 
-### Verification Job
+### ✅ Verification Job (Lambda Function)
 
-#### Why do we need it?
-Both BERT models (Schaden-Objekt & Schaden-Typ-Kennung) make their predictions completely independent one from another, but not all the possible combinations are valid. For instance it would not be a valid combination to return SD-Objekt: AH and SD-Typ: LW 
-So we have basically two options either we return an error (INVALID DATA) or we try to fix the prediction. In order to increase the number of predictions, which where put into the PIA system and reduce the number of cases which are "nicht angelegt". Therefore again pydantic in combination with the instructor package was used for the structured prediction. In my opinion it is the best package for structured predictions (although there are a lot of alternatives, e.g. LangChain, LlamaIndex, Marvin, etc.) but instructor is the most light weight and it offers a retry option which I did not see in all the other packages. 
-- So all in all if a non-valid combination is provided we use Claude + pydantic + instructor in order to return a valid prediction. For instance if the BERT models ("aren't sure" if it is a VK or KH claim Claude eventually has to make a decision)
+The **Verification Job** ensures consistency between the outputs of the two independent BERT models:
 
-#### Proceedure
+- `Schaden-Objekt` (Claimed Object)
+- `Schaden-Typ-Kennung` (Claim Type)
 
-In various experiments we saw that the best result can be achieved if we pass the summary and the BERT predictions to Claude to get a "confirmation / verification" even if it is a valid combination. So basically all the predictions getting confirmed (if we have a non-valid combination from BERT then a valid prediction is made)
+---
 
-#### Exceptions
-Motor claims / BR vs GL claims
-For some cases we saw that they should not be verified (in case they are valid) because Claude overwrites the predictions and makes a correct prediction incorrect. This will be elaborated later.
+#### 🔍 Why Is Verification Needed?
 
+Although both BERT models operate independently, not all prediction combinations are semantically valid. For example:
 
+- `SD-Objekt: AH` and `SD-Typ: LW` is an invalid pairing.
 
+To handle such cases, we have two options:
+
+1. **Reject** the result and return an error (`INVALID DATA`)
+2. **Correct** the result by generating a valid alternative
+
+To reduce the number of rejected cases ("nicht angelegt") and improve integration with the downstream PIA system, we chose the correction path.
+
+This is achieved using:
+
+- **Claude (via AWS Bedrock)** for reasoning
+- **`pydantic`** for response schema enforcement
+- The **`instructor`** library for structured prediction
+
+> Among many alternatives (e.g., LangChain, LlamaIndex, Marvin), `instructor` was chosen due to its lightweight nature and built-in **retry mechanism**, which proved especially effective in this scenario.
+
+In cases where the BERT models are "uncertain" (e.g., differentiating between a **VK** and **KH** claim), Claude is used to make a final, valid decision.
+
+---
+
+#### 🔁 Procedure
+
+In our experiments, we found that the best results are achieved by always passing the **summary** and the **initial BERT predictions** to Claude—regardless of whether the combination is valid.
+
+This allows Claude to either:
+
+- **Confirm** a valid BERT prediction
+- **Adjust** an invalid combination to a valid one
+
+In other words, **all predictions go through a confirmation/verification step**, enabling additional consistency and improving the overall quality of the output.
+
+---
+
+#### ⚠️ Exceptions
+
+There are specific edge cases—such as **motor claims** or distinctions between **BR** and **GL** claims—where even valid predictions should **not** be verified. In these scenarios, Claude has a tendency to **overwrite correct results**, leading to unnecessary or incorrect adjustments.
+
+These exceptions will be discussed in more detail in a later chapter.
