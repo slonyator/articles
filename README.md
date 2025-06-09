@@ -65,22 +65,26 @@ The **Preprocessing Job** is the first step in the AWS processing pipeline. It p
 
 ---
 
-### SageMaker Endpoints for SD-Object & SD-Typ
+### SageMaker Endpoints for SD-Objekt & SD-Typ
 
 #### Why Use SageMaker Endpoints with Fine-Tuned BERT Models Instead of AWS Bedrock?
 
-In our evaluation of different model hosting strategies, we compared the performance of fine-tuned **BERT models** deployed via **Amazon SageMaker Endpoints** against state-of-the-art **Claude models** available through **AWS Bedrock** (including Claude 3 Haiku, Claude 3 Sonnet, and Claude 3.5 Sonnet).
+As part of our model selection process, we evaluated fine-tuned **BERT models** deployed via **Amazon SageMaker Endpoints** against state-of-the-art **Claude models** available through **AWS Bedrock**, including:
+- Claude 3 Haiku  
+- Claude 3 Sonnet  
+- Claude 3.5 Sonnet  
 
-While the Claude models offered competitive results, they consistently underperformed compared to the fine-tuned BERT models **Schaden-Objekt** and **Schaden-Typ-Kennung**. In the future such an evaluation may be revisited, especially as new model versions are released. The *GenAI* library from *GHO* might be a useful resource because it provides access not only to models which are hosted on AWS Bedrock, but also to those offered by other cloud providers, such as *Google* and *Azure*.
+While the Claude models delivered strong results, they consistently underperformed compared to our BERT-based models for the tasks of **Schaden-Objekt** and **Schaden-Typ-Kennung**. Performance differences ranged between **4% and 8%**, depending on the Claude variant used.
 
-The performance difference, while not massive, ranged from **4% to 8%**, depending on the specific Claude variant used for comparison. Given the consistent edge of the BERT-based solution, we opted to continue with our custom-trained models hosted on SageMaker.
+Although the margin is not drastic, the BERT models demonstrated a reliable edge, leading to our decision to retain them as the preferred solution for production use.
 
-> *Note: The training process for the BERT models will be discussed in a separate chapter.*
+This evaluation may be revisited in the future, particularly as newer foundation models become available. The *GenAI* library from *GHO* could play a key role in that effort, offering unified access to models hosted not only on AWS Bedrock but also across other platforms like *Google Cloud* and *Azure*.
+
+> *Note: The training process for the BERT models will be described in a separate chapter.*
 
 #### Cost Considerations
 
-- Both SageMaker endpoints together currently incur a cost of **approximately $500 USD per month**, making them the **second largest cost block** in the application after AWS Textract.
-- Some cost optimization may be possible by selecting a **smaller instance type** for hosting the BERT models. Currently, the instance type in use is: **`<INSERT INSTANCE TYPE>`**.
+- The two SageMaker endpoints together currently generate approximately **$500 USD per month** in operational costs. This makes them the **second largest cost driver** in the claims notification application, following AWS Textract.
+- There is potential for **cost optimization** by exploring a smaller SageMaker instance type. The current instance type in use is: **`<INSERT INSTANCE TYPE>`**.
 
 ---
-
