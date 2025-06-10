@@ -239,3 +239,44 @@ While the current approach is consistent and schema-driven, there is **potential
 This job remains a promising candidate for iterative enhancement as the volume of labeled examples and failure cases increases.
 
 ---
+
+# Evaluation
+
+The target of the evaluation job is to return the predicted values in the way which was agreed with team SAB.
+An example output looks like this:
+
+⁠⁠```
+{
+  "status": "success",
+  "result": [
+    {
+      "type": "SD_TYP_KENNUNG",
+      "label": "HB",
+      "score": 0.8701918125152588
+    },
+    {
+      "type": "SD_URS_ART",
+      "label": "02",
+      "score": 1
+    },
+    {
+      "type": "SD_OBJEKT",
+      "label": "AH",
+      "score": 0.8034162521362305
+    },
+    {
+      "type": "MELDER",
+      "label": "AD",
+      "score": 1
+    },
+    {
+      "type": "SD_DATUM",
+      "value": "03.06.2025",
+      "score": 1
+    }
+  ]
+}
+```
+
+The status tells if all the different lambda functions & sagemaker endpoints where successfully executed. 
+You see that every field not only has a value but also a score. That is mostly for historical reasons. In the past, a given prediction was only put in the PIA system, if the score (the model “confidence”) was high enough. That was used for shallow neural networks (like FastText), but has been dropped since the introduction of transformer based models as the quality of the predictions got good enough. The only field where it still plays a role is the Schaden-Datum. In case no prediction can be made (e.g. there is no claims-date at all in the given document) or e.g. the predicted date is more recent than the date of notification (Meldedatum) than we have to use the date of notification and set the score to 0 indicating that the claims handler has to revise the claims date. The predicted claim is put in the PIA system with a flag “fiktiv” in case the score for the claims date is 0. For all the other fields the score can be neglected.  
