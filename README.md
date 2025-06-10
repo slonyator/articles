@@ -1,8 +1,42 @@
-# Claims Notification
+# 📄 Claims Notification
 
 This project is a hybrid on-premise and AWS-based document processing system. It facilitates automated document retrieval, classification, and evaluation by orchestrating a combination of local services and cloud-native AWS components.
 
 ---
+
+## 🎯 Project Goal
+
+The primary objective of the application is to automatically predict five key data fields from incoming claims documents:
+
+1. **Schaden-Objekt** (Damaged Object)  
+2. **SD-Typ-Kennung** (Claim Type Identifier)  
+3. **SD-URS-ART** (Damage Cause)  
+4. **Schaden-Datum** (Date of Loss)  
+5. **Melder** (Notifier)
+
+These predictions are designed to support automated claim creation and routing in downstream systems.
+
+---
+
+## 🏢 Source of Input
+
+The documents and related inputs are provided by the **CoBE Team SAB**, which acts as the upstream data source for the claims processing pipeline.
+
+---
+
+## 🧾 Claim Segmentation (Sparten)
+
+All processed claims belong to one of the following four insurance segments:
+
+- **AH** – Allgemeine Haftpflicht (General Liability)  
+- **KH** – Kraftfahrt-Haftpflicht (Motor Liability)  
+- **KF** – Kasko/Fahrzeugversicherung (Collision Insurance)  
+- **Sach** – Sachversicherung (Property Insurance)
+
+These segments play a key role in determining routing logic and specialized model behavior throughout the pipeline.
+
+---
+
 
 ## 🏠 On-Premise Service
 
