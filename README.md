@@ -240,43 +240,64 @@ This job remains a promising candidate for iterative enhancement as the volume o
 
 ---
 
-# Evaluation
 
-The target of the evaluation job is to return the predicted values in the way which was agreed with team SAB.
-An example output looks like this:
+### 🧾 Evaluation Job (Lambda Function)
 
-⁠⁠```
+The **Evaluation Job** is the final step in the claims processing pipeline. Its main responsibility is to assemble and return the prediction results in the format agreed upon with the **SAB team**.
+
+---
+
+#### 📦 Output Format
+
+The output is a structured JSON object containing the predicted fields, each accompanied by a corresponding confidence score. An example output looks like this:
+
+```json
 {
-  "status": "success",
-  "result": [
-    {
-      "type": "SD_TYP_KENNUNG",
-      "label": "HB",
-      "score": 0.8701918125152588
-    },
-    {
-      "type": "SD_URS_ART",
-      "label": "02",
-      "score": 1
-    },
-    {
-      "type": "SD_OBJEKT",
-      "label": "AH",
-      "score": 0.8034162521362305
-    },
-    {
-      "type": "MELDER",
-      "label": "AD",
-      "score": 1
-    },
-    {
-      "type": "SD_DATUM",
-      "value": "03.06.2025",
-      "score": 1
-    }
-  ]
+   "status":"success",
+   "result":[
+      {
+         "type":"SD_TYP_KENNUNG",
+         "label":"HB",
+         "score":0.8701918125152588
+      },
+      {
+         "type":"SD_URS_ART",
+         "label":"02",
+         "score":1
+      },
+      {
+         "type":"SD_OBJEKT",
+         "label":"AH",
+         "score":0.8034162521362305
+      },
+      {
+         "type":"MELDER",
+         "label":"AD",
+         "score":1
+      },
+      {
+         "type":"SD_DATUM",
+         "value":"03.06.2025",
+         "score":1
+      }
+   ]
 }
-```
+- The `"status"` field reflects whether all Lambda functions and SageMaker endpoints in the pipeline executed successfully.
+- Each entry in the `"result"` array contains a field `type`, its `label` (or `value`), and a `score` representing model confidence.
 
-The status tells if all the different lambda functions & sagemaker endpoints where successfully executed. 
-You see that every field not only has a value but also a score. That is mostly for historical reasons. In the past, a given prediction was only put in the PIA system, if the score (the model “confidence”) was high enough. That was used for shallow neural networks (like FastText), but has been dropped since the introduction of transformer based models as the quality of the predictions got good enough. The only field where it still plays a role is the Schaden-Datum. In case no prediction can be made (e.g. there is no claims-date at all in the given document) or e.g. the predicted date is more recent than the date of notification (Meldedatum) than we have to use the date of notification and set the score to 0 indicating that the claims handler has to revise the claims date. The predicted claim is put in the PIA system with a flag “fiktiv” in case the score for the claims date is 0. For all the other fields the score can be neglected.  
+---
+
+#### 🧠 Score Handling
+
+While every field includes a `score`, it is now **primarily retained for historical reasons**:
+
+- In earlier versions of the pipeline, when using shallow models like **FastText**, predictions were filtered based on confidence thresholds before integration with the PIA system.
+- With the transition to **transformer-based models**, overall prediction quality improved significantly, making confidence thresholds unnecessary for most fields.
+
+The **only exception** is the **Schaden-Datum (Claims Date)**:
+
+- If no valid date can be extracted (e.g., the document contains no clear claims date), or if the predicted date is **more recent than the Meldedatum** (notification date), the **Meldedatum is used as a fallback**.
+- In such cases, the `score` for `SD_DATUM` is explicitly set to `0` to indicate uncertainty or the need for human validation.
+- The prediction is still sent to the PIA system, but flagged as **"fiktiv"** (placeholder) to signal that the claims handler should manually review the date.
+
+For all other fields, the `score` can generally be ignored.
