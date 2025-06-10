@@ -153,7 +153,7 @@ This is achieved using:
 
 > Among many alternatives (e.g., LangChain, LlamaIndex, Marvin), `instructor` was chosen due to its lightweight nature and built-in **retry mechanism**, which proved especially effective in this scenario.
 
-In cases where the BERT models are "uncertain" (e.g., differentiating between a **VK** and **KH** claim), Claude is used to make a final, valid decision.
+In cases where the BERT models are "uncertain (e.g., differentiating between a **VK** and **KH** claim), Claude is used to make a final, valid decision.
 
 ---
 
@@ -175,3 +175,33 @@ In other words, **all predictions go through a confirmation/verification step**,
 There are specific edge cases—such as **motor claims** or distinctions between **BR** and **GL** claims—where even valid predictions should **not** be verified. In these scenarios, Claude has a tendency to **overwrite correct results**, leading to unnecessary or incorrect adjustments.
 
 These exceptions will be discussed in more detail in a later chapter.
+
+---
+
+
+### 🛠️ Damage Cause Job (Lambda Function)
+
+The **Damage Cause Job** is responsible for identifying the **concrete cause of damage** (`SD-URS-ART`) based on the previously predicted claim type (`Schaden-Typ`).
+
+---
+
+#### 🧩 Process Overview
+
+1. The job begins by reading the `Schaden-Typ` prediction.
+2. Based on this claim type, a **specific `pydantic.BaseModel`** is dynamically selected. Each claim type has its own schema for the damage cause.
+3. Using a **generic prompt**, the selected BaseModel is then used to extract the appropriate **damage cause** from the document.
+4. The response is validated through `pydantic`, ensuring structured, predictable output.
+
+---
+
+#### 🔬 (Potential) Room for Improvement
+
+While the current approach is consistent and schema-driven, there is **potential for improvement** in prediction accuracy:
+
+- **Error Analysis**: Before optimizing, it’s important to identify how many mistakes are made in the field `SD-URS-ART` and whether these errors are due to the prompt's (in-)effectiveness.
+- **Prompt Specialization**: Instead of using a single generic prompt across all claim types, **custom prompts** per `Schaden-Typ` could improve model performance and precision.
+- **Prompt Optimization**: Tools like **[DSPy](https://github.com/stanfordnlp/dspy)** can be explored for **automatic prompt tuning**, potentially yielding more accurate and robust extractions.
+
+This job remains a promising candidate for iterative enhancement as the volume of labeled examples and failure cases increases.
+
+---
